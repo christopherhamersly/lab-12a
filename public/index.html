@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Auth Test</title>
+</head>
+
+<body>
+  <main>
+
+    <a id="oauth" href="#">Login</a>
+
+  </main>
+
+  <script>
+
+    let URL = 'https://public-api.wordpress.com/oauth2/authorize';
+
+    // https://public-api.wordpress.com/oauth2/authorize
+
+    // https://public-api.wordpress.com/oauth2/token
+
+    let options = {
+      client_id: '70144',
+      redirect_uri: 'http://localhost:3000/oauth',
+      // scope: 'read:user',
+      state: '401appconsent', 
+      response_type: 'token',
+    }
+
+
+    // error unsupported_response type error_description=WordPress.com+only+supports+the+"code"+or+"token"+response+types state=401appconsent
+//   Error Code: invalid_client
+//   Error Message: Unknown client_id.
+
+// Server Code Authentication
+//     {
+//     "access_token": "YOUR_API_TOKEN",
+//     "blog_id": "blog ID",
+//     "blog_url": "blog url",
+//     "token_type": "bearer"
+// }
+
+
+// Validating Tokens
+// {
+//     "client_id": "your client ID",
+//     "user_id": "user ID",
+//     "blog_id": "blog ID",
+//     "scope": "scope of the token"
+// }
+
+    let QueryString = Object.keys(options).map((key) => {
+      return `${key}=` + encodeURIComponent(options[key]);
+    }).join("&");
+
+    let authURL = `${URL}?${QueryString}`;
+
+    let link = document.getElementById('oauth');
+    link.setAttribute('href', authURL);
+
+  </script>
+
+
+</body>
+
+</html>
