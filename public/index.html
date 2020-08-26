@@ -13,19 +13,20 @@
   </main>
 
   <script>
+    // let SECRET = process.env.GITHUB_CLIENT_SECRET;
 
-    let URL = 'https://public-api.wordpress.com/oauth2/authorize';
+    let URL = 'https://github.com/login/oauth/authorize';
 
     // https://public-api.wordpress.com/oauth2/authorize
 
     // https://public-api.wordpress.com/oauth2/token
 
     let options = {
-      client_id: '70144',
+
+      client_id: 'c2e6d29186baa36b53d6',
       redirect_uri: 'http://localhost:3000/oauth',
-      // scope: 'read:user',
-      state: '401appconsent', 
-      response_type: 'token',
+      scope: 'read:user',
+      state: '401appconsent'
     }
 
 

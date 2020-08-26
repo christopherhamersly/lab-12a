@@ -1,25 +1,26 @@
 'use strict';
 
 const superagent = require('superagent');
-const users = require('./users.js');
+const users = require('../users');
 
 /*
   Resources
   https://developer.github.com/apps/building-oauth-apps/
 */
 
-const tokenServerUrl = 'https://public-api.wordpress.com/oauth2/token'; 
-const remoteAPI = 'https://api.github.com/user';//need to change
+const tokenServerUrl = 'https://github.com/login/oauth/access_token'; 
+const remoteAPI = 'https://api.github.com/user';
 
 const API_SERVER = 'http://localhost:3000/oauth';
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 module.exports = async function authorize(req, res, next) {
 
   try {
     let code = req.query.code;
     console.log('(1) CODE:', code);
+
 
     let remoteToken = await exchangeCodeForToken(code);
     console.log('(2) ACCESS TOKEN:', remoteToken);
@@ -42,7 +43,7 @@ async function exchangeCodeForToken(code) {
   let tokenResponse = await superagent.post(tokenServerUrl).send({
     code: code,
     client_id: CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
+    client_secret: CLIENT_SECRET,
     redirect_uri: API_SERVER,
     grant_type: 'authorization_code',
   });
@@ -50,7 +51,7 @@ async function exchangeCodeForToken(code) {
 //   Error Code: invalid_client
 //   Error Message: Unknown client_id.
 
-  let access_token = tokenResponse.body.access_token;
+  let access_token = await tokenResponse.body.access_token;
 
   return access_token;
 
@@ -72,7 +73,8 @@ async function getRemoteUserInfo(token) {
 async function getUser(remoteUser) {
   let userRecord = {
     username: remoteUser.login,
-    password: 'oauthpassword', // Placeholder for now
+    // password: 'oauthpassword'
+    password: process.env.GITHUB_PASSWORD, // Placeholder for now
   };
 
   let user = await users.save(userRecord);
